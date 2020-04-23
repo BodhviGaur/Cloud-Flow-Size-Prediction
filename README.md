@@ -1,3 +1,7 @@
 # Cloud-Flow-Size-Prediction
 
 Paper Followed: Is advance knowledge of flow sizes a plausible assumption?https://www.usenix.org/conference/nsdi19/presentation/dukic
+
+Note:
+To compare the effect of knowing flow sizes on the scheduling algorithms, we have to organise the way the tasks reach the scheduler. This must be the same for us to test/compare how the scheduling algorithms are affected. We do this in the following manner:
+We will make a list of all tasks for testing by randomly choosing between the (1-KMeans, 2-SGD, 3-Pagerank) and allocate a starting time randomly between (0 and 1,00,000).
