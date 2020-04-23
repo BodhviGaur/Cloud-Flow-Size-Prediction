@@ -75,7 +75,7 @@ for i in range(201):
     file1.write("\n")
 
 file1.close()
-print(str(c1) + " " + str(c2) + " " + str(c3))
+print(str(c1) + " " + str(c2) + " " + str(c3)) 
 
  
 
