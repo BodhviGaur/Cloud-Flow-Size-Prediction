@@ -5,3 +5,8 @@ Paper Followed: Is advance knowledge of flow sizes a plausible assumption?https:
 Note:
 To compare the effect of knowing flow sizes on the scheduling algorithms, we have to organise the way the tasks reach the scheduler. This must be the same for us to test/compare how the scheduling algorithms are affected. We do this in the following manner:
 We will make a list of all tasks for testing by randomly choosing between the (1-KMeans, 2-SGD, 3-Pagerank) and allocate a starting time randomly between (0 and 1,00,000).
+
+
+We have created a miniature dataset to allow testing (we have a flow in the actual test set amounting to a whooping 93 hrs. This has been doen realising no one will run our test that long).  
+This consists of 10 jobs from KMeans, SGD and Pagerank.   
+SJF : 4762.1541028.  
