@@ -13,20 +13,27 @@ KMeans_num = 1
 SGD_num = 1
 Pagerank_num = 1
 
-def worker():
+count_KMeans = 0
+count_Pagerank = 0
+count_SGD = 0
+
+def worker(lock):
     #This is a worker thread. It fetches the topmost task and sleeps for the shortest job. 
-    print("Worker started")
-    while not (KMeans_num == 92 and SGD_num == 35 and Pagerank_num == 77 and len(sjf_heap) == 0):
-        print("fetching task")
+    #print("Worker started")
+    while not (KMeans_num > count_KMeans and SGD_num > count_SGD and Pagerank_num > count_Pagerank and len(sjf_heap) == 0):
+        #print("fetching task")
+        lock.acquire()
         t = sjf()
+        lock.release()
         if(t == -1):
-            if(KMeans_num == 92 and SGD_num == 35 and Pagerank_num == 77 and len(sjf_heap) == 0):
+            #print(KMeans_num, SGD_num, Pagerank_num)
+            if(KMeans_num > count_KMeans and SGD_num > count_SGD and Pagerank_num > count_Pagerank and len(sjf_heap) == 0):
                 #This is to avoid deadlock. So, if a number of threads entered 
                 return
             else:
                 time.sleep(5)
         else:
-            t = t/1000
+            t = t/100
             time.sleep(t)
     return
         
@@ -43,13 +50,13 @@ def job_incoming():
     for row in file1.index:
         #print(file1.head(2))
         task_type = file1['job_type'][row]
-        sleep_time = file1['incoming_time'][row] / 1000
+        sleep_time = file1['incoming_time'][row] / 100
         time.sleep(sleep_time)
         
         # task = KMeans
         list_to_send = []
         if(task_type == 1):
-            while(fileKMeans['job'][KMeans_iterator] == KMeans_num):
+            while(KMeans_iterator < len(fileKMeans.index) and fileKMeans['job'][KMeans_iterator] == KMeans_num):
                 new_flow = [fileKMeans['predicted_flow_size'][KMeans_iterator], fileKMeans['flow_size'][KMeans_iterator]]
                 list_to_send.append(new_flow)
                 #Send all flows mapped to the KMeans_iterator job.Increment the job number.
@@ -58,7 +65,7 @@ def job_incoming():
                
         # task = SGD
         if(task_type == 2):
-            while(fileSGD['job'][SGD_iterator] == SGD_num):
+            while(SGD_iterator < len(fileSGD.index) and fileSGD['job'][SGD_iterator] == SGD_num):
                 new_flow = [fileSGD['predicted_flow_size'][SGD_iterator], fileSGD['flow_size'][SGD_iterator]]
                 list_to_send.append(new_flow)
                 #Send all flows mapped to the SGD_iterator job.Increment the job number.
@@ -67,13 +74,13 @@ def job_incoming():
             
         # task = Pagerank
         if(task_type == 3):
-            while(filePagerank['job'][Pagerank_iterator] == Pagerank_num):
+            while(Pagerank_iterator < len(filePagerank.index) and filePagerank['job'][Pagerank_iterator] == Pagerank_num):
                 new_flow = [filePagerank['predicted_flow_size'][Pagerank_iterator], filePagerank['flow_size'][Pagerank_iterator]]
                 list_to_send.append(new_flow)
                 #Send all flows mapped to the Pagerank_iterator job.Increment the job number.
                 Pagerank_iterator+=1
             Pagerank_num+=1
-        print(list_to_send)
+        #print(list_to_send)
         create_heap(list_to_send)
         
     return
@@ -88,7 +95,6 @@ def create_heap(new_times):
     '''
     #create heap from all current items
     global sfj_heap
-    #tim = [predicted, actual] flow sizes
     for tim in new_times:
         #sort by completion time, then by FIFO
         heapq.heappush(sjf_heap, tim)
@@ -114,20 +120,31 @@ if __name__ == "__main__":
     filePagerank = pandas.read_csv('PageRank_test_jb.csv')
     fileKMeans = pandas.read_csv('KMeans_test_jb.csv')
     
+    global count_KMeans
+    global count_Pagerank
+    global count_SGD
+    count_KMeans = fileKMeans.iloc[-1]["job"]
+    count_SGD = fileSGD.iloc[-1]["job"]
+    count_Pagerank = filePagerank.iloc[-1]["job"]
+    print(count_KMeans, count_SGD, count_Pagerank)
+    
+    tick1 = time.time()
     t_jobs = threading.Thread(target=job_incoming)
     t_jobs.start()
     
+    lock = threading.Lock()
     workers = []
     for i in range(100):
-        w = threading.Thread(target=worker)
+        w = threading.Thread(target=worker, args=(lock,))
         workers.append(w)
         w.start()
     
     t_jobs.join()
     for w in workers:  # iterates over the threads
         w.join() 
-
+    tick2 = time.time()
     print("WE are done!")
+    print(tick2 - tick1)
     #file1.close()
     #fileSGD.close()
     #filePagerank.close()
