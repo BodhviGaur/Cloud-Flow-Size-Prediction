@@ -10,6 +10,9 @@ We will make a list of all tasks for testing by randomly choosing between the (1
 We have created a miniature dataset to allow testing (we have a flow in the actual test set amounting to a whooping 93 hrs. This has been doen realising no one will run our test that long).  
 This consists of 10 jobs from KMeans, SGD and Pagerank.   
 SJF ideal : 4762.1541028.  
-FIFO ideal : 5765.56560111.  
+FIFO ideal : 5765.56560111.
 Aging : 4343.80259585.  
+
+SJF Predicted with Neural Network : 4672.01515794. 
+
 
