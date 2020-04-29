@@ -11,7 +11,8 @@ We have created a miniature dataset to allow testing (we have a flow in the actu
 This consists of 10 jobs from KMeans, SGD and Pagerank.   
 SJF ideal : 4762.1541028.  
 FIFO ideal : 5765.56560111.
-Aging : 4343.80259585.  
+Aging (500ms) : 4564.5097878.
+Aging (50ms) : 5082.73901892.
 
 SJF Predicted with Neural Network : 4672.01515794. 
 
