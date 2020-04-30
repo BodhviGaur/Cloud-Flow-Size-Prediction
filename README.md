@@ -18,6 +18,7 @@ SJF Predicted with Neural Network : 4672.01515794.
 
 Runtimes
 NN PageRank: 1551 seconds (25 min)   
-NN KMeans: 460.17 seconds (7.6 min)
+NN KMeans: 460.17 seconds (7.6 min) 
+NN SGD: 5798.993380 seconds (1.6 hours)
 
 
