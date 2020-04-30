@@ -16,4 +16,7 @@ Aging (500ms) : 4564.5097878.
 Aging (50ms) : 5082.73901892.  
 SJF Predicted with Neural Network : 4672.01515794. 
 
+Runtimes
+NN PageRank: 1551 seconds (25 min)  
+
 
